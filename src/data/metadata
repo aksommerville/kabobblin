@@ -1,0 +1,15 @@
+fb=320x176
+title=Goblin Kabobblin'
+title$=2
+author=AK Sommerville
+time=2025-05-23
+version=0.0.1
+lang=en
+players=1
+desc=Skewer the goblins with your one arrow.
+freedom=free
+copyright=(c) 2025 AK Sommerville
+advisory=Mild violence
+genre=Platformer
+iconImage=2
+contact=aksommerville@gmail.com
