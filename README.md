@@ -13,8 +13,9 @@ The basic idea:
 ## Agenda
 
 - Friday
-- - [ ] Basic app features: Modal, sprite, map, etc.
-- - [ ] Provisional graphics: Terrain, hero, goblin, arrow
+- - [x] Basic app features: Modal, sprite, map, etc.
+- - [x] Provisional graphics: Terrain, hero, goblin, arrow
+- - - Let's try 8-pixel tiles instead of 16, go for a real lo-fi Atari kind of look.
 - - [ ] Core gameplay
 - - - [ ] Walk, jump, etc
 - - - [ ] Fire arrows (yes, plural, while developing)
@@ -22,10 +23,11 @@ The basic idea:
 - - - [ ] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers
 - - - [ ] Victory and failure conditions
 - - - [ ] Moveable blocks, for influencing goblins' movement.
-- - [ ] By EOD: Game should be basically playable.
+- - [ ] By EOD: Game should be basically playable. No audio or menus, and temporary layouts.
 - Saturday
 - - [ ] Maps. 10..20 would be good.
 - - [ ] Real graphics.
+- - [ ] Sound effects.
 - - [ ] Music.
 - - - [ ] Play
 - - - [ ] Hello
