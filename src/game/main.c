@@ -59,6 +59,22 @@ void egg_client_update(double elapsed) {
     if (sprite->defunct) continue;
     if (sprite->type->update) sprite->type->update(sprite,elapsed);
   }
+  
+  // Level termination.
+  if (g.victory<0) {
+    if (begin_level(g.mapid)<0) {
+      egg_terminate(1);
+      return;
+    }
+  } else if (g.victory>0) {
+    if (begin_level(g.mapid+1)<0) {
+      if (begin_level(1)<0) {
+        egg_terminate(1);
+        return;
+      }
+    }
+  }
+    
   drop_defunct_sprites();
   //TODO victory and failure conditions
 }

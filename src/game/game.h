@@ -32,6 +32,7 @@ extern struct g {
   struct sprite **spritev;
   int spritec,spritea;
   struct sprite *hero; // WEAK. We need this often enough that it's worth pointing to special.
+  int victory; // <0=fail, >0=succeed, 0=playing
 } g;
 
 int res_get(void *dstpp,int tid,int rid);
