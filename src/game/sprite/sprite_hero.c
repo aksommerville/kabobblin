@@ -1,10 +1,21 @@
 #include "game/game.h"
 
+#define HERO_WALK_SPEED 6.0 /* m/s */
+#define HERO_GRAVITY_RATE 18.0 /* m/s**2 */
+#define HERO_GRAVITY_LIMIT 10.0 /* m/s */
+#define HERO_JUMP_DEFAULT 18.0 /* m/s, maximum (initial) jump velocity */
+#define HERO_JUMP_DECAY 72.0 /* m/s**2 */
+
 /* Instance definition.
  */
  
 struct sprite_hero {
   struct sprite hdr;
+  int grounded;
+  double gravity; // m/s, volatile
+  double jump_power; // m/s, volatile
+  int jumping;
+  int jump_blackout; // Waiting for SOUTH to release.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -20,14 +31,107 @@ static void _hero_del(struct sprite *sprite) {
  
 static int _hero_init(struct sprite *sprite) {
   if (!g.hero) g.hero=sprite;
+  sprite->pht=-0.45;
+  sprite->phl=-0.45;
+  sprite->phr=0.45;
+  SPRITE->grounded=1;
+  SPRITE->jump_power=HERO_JUMP_DEFAULT;
   return 0;
+}
+
+/* Begin jumping.
+ */
+ 
+static void hero_begin_jump(struct sprite *sprite) {
+  if (SPRITE->jump_power<=0.0) return;
+  //TODO sound effect
+  SPRITE->jumping=1;
+  SPRITE->grounded=0;
+  SPRITE->jump_blackout=1;
+}
+
+/* Terminate jump.
+ */
+ 
+static void hero_end_jump(struct sprite *sprite) {
+  SPRITE->jumping=0;
+  SPRITE->jump_power=0.0;
+}
+
+/* Continue jumping.
+ */
+ 
+static void hero_update_jump(struct sprite *sprite,double elapsed) {
+  sprite->y-=SPRITE->jump_power*elapsed;
+  physics_rectify_sprite(sprite,0.0,1.0);
+  SPRITE->jump_power-=elapsed*HERO_JUMP_DECAY;
+  if (SPRITE->jump_power<=0.0) {
+    SPRITE->jumping=0;
+  }
+}
+
+/* Begin falling.
+ */
+ 
+static void hero_fall(struct sprite *sprite) {
+  SPRITE->grounded=0;
+  SPRITE->jump_power=0.0;
+}
+
+/* End a fall.
+ */
+ 
+static void hero_land(struct sprite *sprite) {
+  SPRITE->grounded=1;
+  SPRITE->gravity=0.0;
+  SPRITE->jump_power=HERO_JUMP_DEFAULT;
 }
 
 /* Update.
  */
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
-  //TODO
+
+  /* Walk horizontally.
+   */
+  switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+    case EGG_BTN_LEFT: {
+        sprite->xform=EGG_XFORM_XREV;
+        sprite->x-=HERO_WALK_SPEED*elapsed;
+        physics_rectify_sprite(sprite,1.0,0.0);
+      } break;
+    case EGG_BTN_RIGHT: {
+        sprite->xform=0;
+        sprite->x+=HERO_WALK_SPEED*elapsed;
+        physics_rectify_sprite(sprite,-1.0,0.0);
+      } break;
+  }
+  
+  /* Jump or gravity.
+   */
+  if (!(g.input&EGG_BTN_SOUTH)) SPRITE->jump_blackout=0;
+  if (SPRITE->jumping) {
+    if (!(g.input&EGG_BTN_SOUTH)) {
+      hero_end_jump(sprite);
+    } else {
+      hero_update_jump(sprite,elapsed);
+    }
+  } else if ((g.input&EGG_BTN_SOUTH)&&(SPRITE->jump_power>0.0)&&!SPRITE->jump_blackout) {
+    hero_begin_jump(sprite);
+  } else {
+    SPRITE->gravity+=HERO_GRAVITY_RATE*elapsed;
+    if (SPRITE->gravity>HERO_GRAVITY_LIMIT) SPRITE->gravity=HERO_GRAVITY_LIMIT;
+    sprite->y+=SPRITE->gravity*elapsed;
+    if (physics_rectify_sprite(sprite,0.0,-1.0)) {
+      SPRITE->gravity=0.0;
+      if (!SPRITE->grounded) hero_land(sprite);
+    } else {
+      if (SPRITE->grounded) hero_fall(sprite);
+    }
+  }
+  
+  //TODO hazards
+  //TODO arrows
 }
 
 /* Render.

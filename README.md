@@ -17,7 +17,7 @@ The basic idea:
 - - [x] Provisional graphics: Terrain, hero, goblin, arrow
 - - - Let's try 8-pixel tiles instead of 16, go for a real lo-fi Atari kind of look.
 - - [ ] Core gameplay
-- - - [ ] Walk, jump, etc
+- - - [x] Walk, jump, etc
 - - - [ ] Fire arrows (yes, plural, while developing)
 - - - [ ] Goblins
 - - - [ ] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers

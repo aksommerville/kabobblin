@@ -23,6 +23,7 @@ extern struct g {
   struct graf graf;
   struct font *font;
   int texid_tiles; // Going to try to fit all the tiles in one sheet.
+  int input,pvinput; // Refreshed by main, before any modals or sprites see it. Read-only to them.
   
   int mapid;
   uint8_t map[COLC*ROWC];
@@ -47,6 +48,7 @@ struct sprite {
   double x,y; // center, in meters
   uint8_t tileid,xform;
   int defunct;
+  double phl,phr,pht,phb; // physical bounds relative to center. (phl,pht) should usually be negative.
 };
 struct sprite_type {
   const char *name;
@@ -61,6 +63,12 @@ void kill_all_sprites();
 void kill_sprite(struct sprite *sprite);
 struct sprite *spawn_sprite(int spriteid,const struct sprite_type *type,double x,double y); // (spriteid) or (type); both is an error
 const struct sprite_type *sprite_type_by_id(int sprtype);
+
+/* physics.c
+ * We'll manage collisions and whatnot ad-hoc in sprite controllers.
+ * Call out to physics as positions change.
+ */
+int physics_rectify_sprite(struct sprite *sprite,double corrx,double corry);
 
 #define _(tag) extern const struct sprite_type sprite_type_##tag;
 SPRTYPE_FOR_EACH

@@ -16,6 +16,10 @@ static struct sprite *sprite_alloc(const struct sprite_type *type) {
   struct sprite *sprite=calloc(1,type->objlen);
   if (!sprite) return 0;
   sprite->type=type;
+  sprite->phl=-0.5;
+  sprite->pht=-0.5;
+  sprite->phr=0.5;
+  sprite->phb=0.5;
   return sprite;
 }
 

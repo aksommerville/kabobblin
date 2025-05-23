@@ -44,7 +44,15 @@ int egg_client_init() {
 }
 
 void egg_client_update(double elapsed) {
-  // TODO poll input
+  g.pvinput=g.input;
+  g.input=egg_input_get_one(0); // we only get one
+  if (g.input!=g.pvinput) {
+    if ((g.input&EGG_BTN_AUX3)&&!(g.pvinput&EGG_BTN_AUX3)) {
+      egg_terminate(0);
+      return;
+    }
+  }
+  // TODO modals
   int i=g.spritec;
   while (i-->0) {
     struct sprite *sprite=g.spritev[i];
@@ -52,6 +60,7 @@ void egg_client_update(double elapsed) {
     if (sprite->type->update) sprite->type->update(sprite,elapsed);
   }
   drop_defunct_sprites();
+  //TODO victory and failure conditions
 }
 
 void egg_client_render() {
