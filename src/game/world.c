@@ -6,7 +6,9 @@
 int begin_level(int mapid) {
   kill_all_sprites();
   g.victory=0;
+  g.deferred_victory=0;
   g.mapid=mapid;
+  g.arrows_remaining=1;
 
   const void *serial=0;
   int serialc=res_get(&serial,EGG_TID_map,mapid);

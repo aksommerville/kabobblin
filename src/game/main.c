@@ -43,6 +43,25 @@ int egg_client_init() {
   return 0;
 }
 
+static void check_completion(double elapsed) {
+  int status=1;
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite->defunct) continue;
+    if (sprite->type==&sprite_type_goblin) {
+      status=-1;
+      break;
+    }
+  }
+  if (status!=g.deferred_victory) {
+    g.deferred_victory=status;
+    g.deferred_victory_clock=3.0;
+  } else if ((g.deferred_victory_clock-=elapsed)<=0.0) {
+    g.victory=g.deferred_victory;
+  }
+}
+
 void egg_client_update(double elapsed) {
   g.pvinput=g.input;
   g.input=egg_input_get_one(0); // we only get one
@@ -61,6 +80,9 @@ void egg_client_update(double elapsed) {
   }
   
   // Level termination.
+  if (!g.victory&&!g.arrows_remaining) {
+    check_completion(elapsed);
+  }
   if (g.victory<0) {
     if (begin_level(g.mapid)<0) {
       egg_terminate(1);

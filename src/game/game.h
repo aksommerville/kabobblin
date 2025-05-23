@@ -33,6 +33,9 @@ extern struct g {
   int spritec,spritea;
   struct sprite *hero; // WEAK. We need this often enough that it's worth pointing to special.
   int victory; // <0=fail, >0=succeed, 0=playing
+  int arrows_remaining;
+  int deferred_victory;
+  double deferred_victory_clock;
 } g;
 
 int res_get(void *dstpp,int tid,int rid);
@@ -74,5 +77,7 @@ int physics_rectify_sprite(struct sprite *sprite,double corrx,double corry);
 #define _(tag) extern const struct sprite_type sprite_type_##tag;
 SPRTYPE_FOR_EACH
 #undef _
+
+void arrow_setup(struct sprite *sprite,double dx);
 
 #endif

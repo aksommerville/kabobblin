@@ -18,11 +18,12 @@ The basic idea:
 - - - Let's try 8-pixel tiles instead of 16, go for a real lo-fi Atari kind of look.
 - - [ ] Core gameplay
 - - - [x] Walk, jump, etc
-- - - [ ] Fire arrows (yes, plural, while developing)
+- - - [x] Fire arrows (yes, plural, while developing)
 - - - [ ] Goblins
 - - - [ ] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers
-- - - [ ] Victory and failure conditions
+- - - [x] Victory and failure conditions
 - - - [ ] Moveable blocks, for influencing goblins' movement.
+- - [ ] Coyote time.
 - - [ ] By EOD: Game should be basically playable. No audio or menus, and temporary layouts.
 - Saturday
 - - [ ] Maps. 10..20 would be good.

@@ -149,8 +149,19 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     }
   }
   
+  /* Fire arrow.
+   */
+  if (!SPRITE->dragging&&g.arrows_remaining) {
+    if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+      struct sprite *arrow=spawn_sprite(0,&sprite_type_arrow,sprite->x,sprite->y);
+      if (arrow) {
+        arrow_setup(arrow,(sprite->xform&EGG_XFORM_XREV)?-1.0:1.0);
+        g.arrows_remaining--;
+      }
+    }
+  }
+  
   //TODO hazards
-  //TODO arrows
   
   /* Fallen into a pit?
    */

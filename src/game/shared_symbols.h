@@ -29,9 +29,11 @@
 #define NS_sprtype_dummy 1
 #define NS_sprtype_hero 2
 #define NS_sprtype_goblin 3
+#define NS_sprtype_arrow 4
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
-  _(goblin)
+  _(goblin) \
+  _(arrow)
 
 #endif
