@@ -24,7 +24,6 @@ void arrow_setup(struct sprite *sprite,double dx) {
   } else {
     sprite->xform=0;
   }
-  sprite->x+=dx;
 }
 
 static void arrow_check_skewer(struct sprite *sprite) {

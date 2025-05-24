@@ -103,8 +103,17 @@ static void goblin_decide_phase(struct sprite *sprite) {
     }
   }
   
-  // If there's at least two meters of freedom, walk.
+  // If we've poked outside the valid range, force back into it.
   double xrange=xhi-xlo;
+  if (xrange>=sprite->phr-sprite->phl) {
+    if (sprite->x+sprite->phl<xlo) {
+      sprite->x=xlo-sprite->phl;
+    } else if (sprite->x+sprite->phr>xhi) {
+      sprite->x=xhi-sprite->phr;
+    }
+  }
+  
+  // If there's at least two meters of freedom, walk.
   if (xrange>=1.5) {
     SPRITE->phase=GOBLIN_PHASE_WALK;
     SPRITE->phaseclock=7.0;
@@ -233,7 +242,6 @@ static void goblin_update_ATTACK(struct sprite *sprite,double elapsed) {
       SPRITE->phase=GOBLIN_PHASE_EAT;
       SPRITE->phaseclock=999.0;
       //TODO sound effect
-      //TODO do we need to report the dead hero to somebody?
     }
     return;
   }

@@ -11,8 +11,8 @@
 // Scoring. TODO Tweak these, especially TIME, after the full set of maps is ready.
 #define PARTICIPATION_AWARD 100
 #define TIME_BONUS_MAX 1000 /* What you get for completing below the minimum time. */
-#define TIME_MINIMUM   30.0
-#define TIME_MAXIMUM   60.0
+#define TIME_MINIMUM   120.0
+#define TIME_MAXIMUM   240.0
 #define TREASURE_BONUS 100 /* Per treasure. */
 #define DEATH_BONUS -20 /* Per death. */
 

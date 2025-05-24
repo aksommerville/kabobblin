@@ -29,10 +29,12 @@ The basic idea:
 - - [x] By EOD: Game should be basically playable. No audio or menus, and temporary layouts. ...missed
 - Saturday
 - - [x] Treasure.
-- - [ ] Maps. 10..20 would be good.
-- - [ ] Select reasonable top and bottom times for the bonus.
-- - - With 12 maps, I've done under 2:30, just barely.
-- - - 2:30..4:00?
+- - [x] Maps. 10..20 would be good. ...got 12
+- - [x] Select reasonable top and bottom times for the bonus.
+- - - With 12 maps, 1:51.204, still not optimal but pretty good (with all treasure). 1:08.612 without gold.
+- - - 2:30..4:00? ...2:00
+- - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
+- - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
 - - [ ] Real graphics.
 - - [ ] Sound effects.
 - - [x] Music.

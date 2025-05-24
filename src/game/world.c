@@ -4,7 +4,7 @@
  */
  
 int begin_level(int mapid) {
-  fprintf(stderr,"%s %d...\n",__func__,mapid);
+  //fprintf(stderr,"%s %d...\n",__func__,mapid);
   kill_all_sprites();
   g.victory=0;
   g.deferred_victory=0;

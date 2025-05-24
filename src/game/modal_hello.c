@@ -1,7 +1,7 @@
 #include "game.h"
 
 struct hello {
-  double cooldown_clock;
+  int dummy;
 };
 
 /* Delete.
@@ -19,8 +19,6 @@ struct hello *hello_new() {
   struct hello *hello=calloc(1,sizeof(struct hello));
   if (!hello) return 0;
   
-  hello->cooldown_clock=1.0;
-  
   return hello;
 }
 
@@ -28,13 +26,9 @@ struct hello *hello_new() {
  */
  
 void hello_update(struct hello *hello,double elapsed) {
-  if (hello->cooldown_clock>0.0) {
-    hello->cooldown_clock-=elapsed;
-  } else {
-    if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) {
-      begin_play(); // deletes me
-      return;
-    }
+  if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) {
+    begin_play(); // deletes me
+    return;
   }
 }
 
