@@ -35,7 +35,8 @@ The basic idea:
 - - - 2:30..4:00? ...2:00
 - - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
 - - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
-- - [ ] Real graphics.
+- - [x] Real graphics.
+- - - ...I actually like what we have, maybe don't change anything.
 - - [x] Visual fireworks for treasure.
 - - [x] Sound effects.
 - - [x] Music.
@@ -45,7 +46,7 @@ The basic idea:
 - - [x] Modals.
 - - - [x] Hello. Do a combined hello/gameover like Dot's Wicked Garden, I liked that.
 - - - [x] Scene Denouement, and find a more concise name for that.
-- - [ ] By EOD: Try to be completely finished with the game. So we can see it fresh tomorrow for second-guessing.
+- - [x] By EOD: Try to be completely finished with the game. So we can see it fresh tomorrow for second-guessing.
 - Sunday
 - - [ ] Finish game by 1700. That's plenty of overflow time if needed.
 - - [ ] Finish Itch page by 2200, test, etc.
