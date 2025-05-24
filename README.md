@@ -32,13 +32,13 @@ The basic idea:
 - - [ ] Maps. 10..20 would be good.
 - - [ ] Real graphics.
 - - [ ] Sound effects.
-- - [ ] Music.
-- - - [ ] Play
-- - - [ ] Hello
-- - - [ ] Denouement
-- - [ ] Modals.
-- - - [ ] Hello. Do a combined hello/gameover like Dot's Wicked Garden, I liked that.
-- - - [ ] Scene Denouement, and find a more concise name for that.
+- - [x] Music.
+- - - [x] Play
+- - - [x] Hello
+- - - [x] Denouement ...same as hello, i think it's ok
+- - [x] Modals.
+- - - [x] Hello. Do a combined hello/gameover like Dot's Wicked Garden, I liked that.
+- - - [x] Scene Denouement, and find a more concise name for that.
 - - [ ] By EOD: Try to be completely finished with the game. So we can see it fresh tomorrow for second-guessing.
 - Sunday
 - - [ ] Finish game by 1700. That's plenty of overflow time if needed.

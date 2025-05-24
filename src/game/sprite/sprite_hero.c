@@ -21,6 +21,7 @@ struct sprite_hero {
   int dragging;
   double animclock;
   int animframe;
+  int input_blackout; // After construction, all inputs must go zero before we acknowledge them.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -41,6 +42,7 @@ static int _hero_init(struct sprite *sprite) {
   sprite->phr=0.45;
   SPRITE->grounded=1;
   SPRITE->jump_power=HERO_JUMP_DEFAULT;
+  SPRITE->input_blackout=1;
   return 0;
 }
 
@@ -122,10 +124,16 @@ static void hero_not_walking(struct sprite *sprite) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
 
+  int input=g.input;
+  if (SPRITE->input_blackout) {
+    if (!(input&(EGG_BTN_LEFT|EGG_BTN_RIGHT|EGG_BTN_SOUTH|EGG_BTN_WEST))) SPRITE->input_blackout=0;
+    else input=0;
+  }
+
   /* Walk horizontally.
    */
   SPRITE->dragging=0;
-  switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+  switch (input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
     case EGG_BTN_LEFT: {
         hero_is_walking(sprite,elapsed);
         sprite->xform=EGG_XFORM_XREV;
@@ -147,14 +155,14 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   
   /* Jump or gravity.
    */
-  if (!(g.input&EGG_BTN_SOUTH)) SPRITE->jump_blackout=0;
+  if (!(input&EGG_BTN_SOUTH)) SPRITE->jump_blackout=0;
   if (SPRITE->jumping) {
-    if (!(g.input&EGG_BTN_SOUTH)) {
+    if (!(input&EGG_BTN_SOUTH)) {
       hero_end_jump(sprite);
     } else {
       hero_update_jump(sprite,elapsed);
     }
-  } else if ((g.input&EGG_BTN_SOUTH)&&((SPRITE->jump_power>0.0)||SPRITE->dragging)&&!SPRITE->jump_blackout) {
+  } else if ((input&EGG_BTN_SOUTH)&&((SPRITE->jump_power>0.0)||SPRITE->dragging)&&!SPRITE->jump_blackout) {
     hero_begin_jump(sprite);
   } else {
     SPRITE->gravity+=HERO_GRAVITY_RATE*elapsed;
@@ -175,7 +183,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   /* Fire arrow.
    */
   if (!SPRITE->dragging&&g.arrows_remaining) {
-    if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+    if ((input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
       struct sprite *arrow=spawn_sprite(0,&sprite_type_arrow,sprite->x,sprite->y);
       if (arrow) {
         arrow_setup(arrow,(sprite->xform&EGG_XFORM_XREV)?-1.0:1.0);
@@ -183,8 +191,6 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       }
     }
   }
-  
-  //TODO hazards
   
   /* Fallen into a pit?
    */

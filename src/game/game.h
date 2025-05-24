@@ -8,6 +8,14 @@
 
 #define FADE_OUT_TIME 0.500
 
+// Scoring. TODO Tweak these, especially TIME, after the full set of maps is ready.
+#define PARTICIPATION_AWARD 100
+#define TIME_BONUS_MAX 1000 /* What you get for completing below the minimum time. */
+#define TIME_MINIMUM   30.0
+#define TIME_MAXIMUM   60.0
+#define TREASURE_BONUS 100 /* Per treasure. */
+#define DEATH_BONUS -20 /* Per death. */
+
 struct sprite;
 struct sprite_type;
 
@@ -18,6 +26,7 @@ struct sprite_type;
 #include "opt/rom/rom.h"
 #include "egg_rom_toc.h"
 #include "shared_symbols.h"
+#include "modals.h"
 
 extern struct g {
   void *rom;
@@ -26,6 +35,10 @@ extern struct g {
   struct font *font;
   int texid_tiles; // Going to try to fit all the tiles in one sheet.
   int input,pvinput; // Refreshed by main, before any modals or sprites see it. Read-only to them.
+  
+  // No generalized modals. There's a Hello and a Game Over, both entirely bespoke.
+  struct hello *hello;
+  struct gameover *gameover;
   
   int mapid;
   uint8_t map[COLC*ROWC];
@@ -42,6 +55,7 @@ extern struct g {
   int got_treasure; // Nonzero if we got the treasure this time. It only counts after you win the level.
   int deathc; // Per session.
   double playtime; // Per session, modals don't count.
+  int hiscore;
 } g;
 
 int res_get(void *dstpp,int tid,int rid);
@@ -86,5 +100,13 @@ SPRTYPE_FOR_EACH
 
 void arrow_setup(struct sprite *sprite,double dx);
 int arrow_finished(const struct sprite *sprite);
+
+/* Change mode. (main.c)
+ */
+void begin_hello();
+void begin_gameover();
+void begin_play();
+
+void hiscore_save();
 
 #endif

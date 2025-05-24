@@ -33,7 +33,5 @@ int begin_level(int mapid) {
     }
   }
   
-  //TODO restart music
-  
   return 0;
 }
