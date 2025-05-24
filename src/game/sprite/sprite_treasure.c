@@ -29,7 +29,8 @@ static void _treasure_update(struct sprite *sprite,double elapsed) {
     if ((dy<-TREASURE_COLLECT_DISTANCE)||(dy>TREASURE_COLLECT_DISTANCE)) return;
     sprite->defunct=1;
     g.got_treasure=1;
-    //TODO sound effect
+    egg_play_sound(RID_sound_treasure);
+    //TODO visual fireworks?
   }
 }
 

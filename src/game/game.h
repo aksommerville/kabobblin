@@ -8,7 +8,7 @@
 
 #define FADE_OUT_TIME 0.500
 
-// Scoring. TODO Tweak these, especially TIME, after the full set of maps is ready.
+// Scoring. Current maximum possible score is 2300, and that is achievable.
 #define PARTICIPATION_AWARD 100
 #define TIME_BONUS_MAX 1000 /* What you get for completing below the minimum time. */
 #define TIME_MINIMUM   120.0

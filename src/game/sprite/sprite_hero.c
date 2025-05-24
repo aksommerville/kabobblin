@@ -56,7 +56,7 @@ static void hero_begin_jump(struct sprite *sprite) {
   } else {
     if (SPRITE->jump_power<=0.0) return;
   }
-  //TODO sound effect
+  egg_play_sound(RID_sound_jump);
   SPRITE->jumping=1;
   SPRITE->grounded=0;
   SPRITE->jump_blackout=1;
@@ -189,6 +189,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     if ((input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
       struct sprite *arrow=spawn_sprite(0,&sprite_type_arrow,sprite->x,sprite->y);
       if (arrow) {
+        egg_play_sound(RID_sound_arrow);
         arrow_setup(arrow,(sprite->xform&EGG_XFORM_XREV)?-1.0:1.0);
         g.arrows_remaining--;
       }

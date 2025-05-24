@@ -36,7 +36,8 @@ The basic idea:
 - - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
 - - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
 - - [ ] Real graphics.
-- - [ ] Sound effects.
+- - [ ] Visual fireworks for treasure.
+- - [x] Sound effects.
 - - [x] Music.
 - - - [x] Play
 - - - [x] Hello

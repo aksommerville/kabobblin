@@ -241,7 +241,7 @@ static void goblin_update_ATTACK(struct sprite *sprite,double elapsed) {
       g.hero=0;
       SPRITE->phase=GOBLIN_PHASE_EAT;
       SPRITE->phaseclock=999.0;
-      //TODO sound effect
+      egg_play_sound(RID_sound_eat);
     }
     return;
   }
@@ -291,6 +291,7 @@ static void _goblin_update(struct sprite *sprite,double elapsed) {
     if ((dy>-0.500)&&(dy<0.500)) {
       double dx=g.hero->x-sprite->x;
       if ((dx>-GOBLIN_ATTACK_DISTANCE)&&(dx<GOBLIN_ATTACK_DISTANCE)) {
+        egg_play_sound(RID_sound_attack);
         SPRITE->phase=GOBLIN_PHASE_ATTACK;
         SPRITE->phaseclock=999.0;
         sprite->tileid=SPRITE->tileid0+3;

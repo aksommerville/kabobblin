@@ -38,6 +38,7 @@ static void arrow_check_skewer(struct sprite *sprite) {
       if (sprite->y>dumpling->y+dumpling->phb) continue;
       dumpling->defunct=1;
       SPRITE->goblinc++;
+      egg_play_sound(RID_sound_skewer);
       if (SPRITE->dx<0.0) {
         if (dumpling->x<sprite->x) {
           sprite->x=dumpling->x;
@@ -63,6 +64,7 @@ static void _arrow_update(struct sprite *sprite,double elapsed) {
       uint8_t physics=g.physics[g.map[row*COLC+col]];
       if (physics==NS_physics_solid) {
         SPRITE->stuck=1;
+        egg_play_sound(RID_sound_arrow_stuck);
         if (SPRITE->dx<0.0) {
           sprite->x=col+0.875;
         } else {
