@@ -46,19 +46,31 @@ int egg_client_init() {
 }
 
 static void check_completion(double elapsed) {
-  int status=1;
-  int i=g.spritec;
-  while (i-->0) {
-    struct sprite *sprite=g.spritev[i];
-    if (sprite->defunct) continue;
-    if (sprite->type==&sprite_type_goblin) {
+  if (g.victory) return; // Already established.
+  int status=0;
+  if (!g.hero) {
+    status=-1;
+  } else {
+    int have_goblin=0;
+    int i=g.spritec;
+    while (i-->0) {
+      struct sprite *sprite=g.spritev[i];
+      if (sprite->defunct) continue;
+      if (sprite->type==&sprite_type_goblin) {
+        have_goblin=1;
+        break;
+      }
+    }
+    if (!have_goblin) {
+      status=1;
+    } else if (!g.arrows_remaining) {
       status=-1;
-      break;
     }
   }
+  if (!status) return;
   if (status!=g.deferred_victory) {
     g.deferred_victory=status;
-    g.deferred_victory_clock=3.0;
+    g.deferred_victory_clock=2.0;
   } else if ((g.deferred_victory_clock-=elapsed)<=0.0) {
     g.victory=g.deferred_victory;
   }
@@ -82,9 +94,7 @@ void egg_client_update(double elapsed) {
   }
   
   // Level termination.
-  if (!g.victory&&!g.arrows_remaining) {
-    check_completion(elapsed);
-  }
+  check_completion(elapsed);
   if (g.victory<0) {
     if (begin_level(g.mapid)<0) {
       egg_terminate(1);

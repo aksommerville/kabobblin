@@ -19,12 +19,13 @@ The basic idea:
 - - [ ] Core gameplay
 - - - [x] Walk, jump, etc
 - - - [x] Fire arrows (yes, plural, while developing)
-- - - [ ] Goblins
+- - - [x] Goblins
 - - - [ ] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers
 - - - [x] Victory and failure conditions
 - - - [ ] Moveable blocks, for influencing goblins' movement.
 - - [ ] Coyote time.
-- - [ ] By EOD: Game should be basically playable. No audio or menus, and temporary layouts.
+- - [ ] Hero animation.
+- - [ ] By EOD: Game should be basically playable. No audio or menus, and temporary layouts. ...missed
 - Saturday
 - - [ ] Maps. 10..20 would be good.
 - - [ ] Real graphics.

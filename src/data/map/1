@@ -13,9 +13,4 @@
 image image:tiles
 sprite @2,4 sprite:goblin 0x00000000
 sprite @17,5 sprite:hero 0x00000000
-sprite @8,4 sprite:goblin 0x00000000
 sprite @6,4 sprite:goblin 0x00000000
-sprite @4,4 sprite:goblin 0x00000000
-sprite @3,4 sprite:goblin 0x00000000
-sprite @5,4 sprite:goblin 0x00000000
-sprite @7,4 sprite:goblin 0x00000000
