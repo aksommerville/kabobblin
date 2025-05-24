@@ -25,6 +25,7 @@
 struct gameover {
   int phase;
   double clock; // Counts up, and resets at each phase transition.
+  double cinemaclock; // Doesn't reset.
   uint8_t text[CELL_COLC*CELL_ROWC]; // 0x80..0xaf or 0
   
   // Nonzero if we've rendered the final values for a given line:
@@ -229,10 +230,19 @@ static void gameover_final_total(struct gameover *gameover) {
   gameover_printf(gameover,6,"    Best:        %9",g.hiscore);
 }
 
+/* Update the cinematic sequence.
+ * Probly just means the clock, and let render handle the rest.
+ */
+ 
+static void gameover_update_cinema(struct gameover *gameover,double elapsed) {
+  gameover->cinemaclock+=elapsed;
+}
+
 /* Update.
  */
  
 void gameover_update(struct gameover *gameover,double elapsed) {
+  gameover_update_cinema(gameover,elapsed);
   gameover->clock+=elapsed;
   switch (gameover->phase) {
   
@@ -320,7 +330,54 @@ void gameover_render(struct gameover *gameover) {
   int dsty=FBH-(NS_sys_tilesize>>1);
   for (;dstx<FBW;dstx+=NS_sys_tilesize) graf_draw_tile(&g.graf,g.texid_tiles,dstx,dsty,0x11,0);
   
-  //TODO Animated sequence of the hero rescuing the princess.
+  /* Princess stands a little right of center and never moves.
+   * Hero approaches from the left and stops say 2 meters left of her.
+   * If you have all the treasure, a heart appears.
+   * Any less than all of it, she says "Where's the treasure?", then "Try again" and points back to the left.
+   * At which point the hero walks back.
+   */
+  int actiony=FBH-NS_sys_tilesize-(NS_sys_tilesize>>1);
+  int princessx=(FBW>>1)+NS_sys_tilesize;
+  uint8_t princesstile=0x74;
+  int heroxz=(FBW>>1)-NS_sys_tilesize;
+  uint8_t herotile=0x40;
+  uint8_t heroxform=0;
+  int herox=heroxz;
+  // Four seconds of hero approaching.
+  if (gameover->cinemaclock<4.0) {
+    herox=-5+(int)(((heroxz+5)*gameover->cinemaclock)/4.0);
+    switch (((int)(gameover->cinemaclock*5.0))&3) {
+      case 1: herotile+=1; break;
+      case 3: herotile+=2; break;
+    }
+  // All the treasure? Great, they're in love!
+  } else if (g.treasurec+1==g.mapid) {
+    graf_draw_tile(&g.graf,g.texid_tiles,FBW>>1,actiony-NS_sys_tilesize,0x76,0);
+  // Princess dialogue, and hero goes back for the treasure.
+  } else {
+    if (gameover->cinemaclock>=30.0) {
+      herox=-50;
+    } else if (gameover->cinemaclock>=10.0) {
+      herox=heroxz-(int)(heroxz*(gameover->cinemaclock-10.0)*0.250);
+      switch (((int)(gameover->cinemaclock*5.0))&3) {
+        case 1: herotile+=1; break;
+        case 3: herotile+=2; break;
+      }
+      heroxform=EGG_XFORM_XREV;
+      int dlogw=36,dlogh=12;
+      int dlogx=princessx-(dlogw>>1);
+      int dlogy=actiony-dlogh-5;
+      graf_draw_decal(&g.graf,g.texid_tiles,dlogx,dlogy,92,108,dlogw,dlogh,0); // "Try again"
+      princesstile=0x75;
+    } else {
+      int dlogw=36,dlogh=16;
+      int dlogx=princessx-(dlogw>>1);
+      int dlogy=actiony-dlogh-5;
+      graf_draw_decal(&g.graf,g.texid_tiles,dlogx,dlogy,92,88,dlogw,dlogh,0); // "Where's the gold?"
+    }
+  }
+  graf_draw_tile(&g.graf,g.texid_tiles,herox,actiony,herotile,heroxform);
+  graf_draw_tile(&g.graf,g.texid_tiles,princessx,actiony,princesstile,0);
   
   // Text console.
   const uint8_t *src=gameover->text;
