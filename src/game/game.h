@@ -6,6 +6,8 @@
 #define COLC 20 /* All maps same size, exactly one screenful. */
 #define ROWC 11
 
+#define FADE_OUT_TIME 0.500
+
 struct sprite;
 struct sprite_type;
 
@@ -36,6 +38,10 @@ extern struct g {
   int arrows_remaining;
   int deferred_victory;
   double deferred_victory_clock;
+  int treasurec; // Total treasure collected for session. Updates only as we win the level.
+  int got_treasure; // Nonzero if we got the treasure this time. It only counts after you win the level.
+  int deathc; // Per session.
+  double playtime; // Per session, modals don't count.
 } g;
 
 int res_get(void *dstpp,int tid,int rid);
@@ -79,5 +85,6 @@ SPRTYPE_FOR_EACH
 #undef _
 
 void arrow_setup(struct sprite *sprite,double dx);
+int arrow_finished(const struct sprite *sprite);
 
 #endif

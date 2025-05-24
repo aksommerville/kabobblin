@@ -1,0 +1,3 @@
+image image:tiles
+tile 0x70 0
+sprtype (u16:sprtype)treasure

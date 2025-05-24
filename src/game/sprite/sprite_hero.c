@@ -19,6 +19,8 @@ struct sprite_hero {
   int jump_blackout; // Waiting for SOUTH to release.
   int walking;
   int dragging;
+  double animclock;
+  int animframe;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -94,6 +96,27 @@ static void hero_land(struct sprite *sprite) {
   SPRITE->jump_power=HERO_JUMP_DEFAULT;
 }
 
+/* Start the walking animation if we were still.
+ */
+ 
+static void hero_is_walking(struct sprite *sprite,double elapsed) {
+  if (!SPRITE->walking) {
+    SPRITE->walking=1;
+    SPRITE->animclock=0.250;
+    SPRITE->animframe=1;
+  }
+  if ((SPRITE->animclock-=elapsed)<=0.0) {
+    SPRITE->animclock+=0.250;
+    if (++(SPRITE->animframe)>=4) SPRITE->animframe=0;
+  }
+}
+
+static void hero_not_walking(struct sprite *sprite) {
+  if (!SPRITE->walking) return;
+  SPRITE->walking=0;
+  SPRITE->animframe=0;
+}
+
 /* Update.
  */
  
@@ -101,11 +124,10 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
 
   /* Walk horizontally.
    */
-  SPRITE->walking=0;
   SPRITE->dragging=0;
   switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
     case EGG_BTN_LEFT: {
-        SPRITE->walking=1;
+        hero_is_walking(sprite,elapsed);
         sprite->xform=EGG_XFORM_XREV;
         sprite->x-=HERO_WALK_SPEED*elapsed;
         if (physics_rectify_sprite(sprite,1.0,0.0)) {
@@ -113,13 +135,14 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
         }
       } break;
     case EGG_BTN_RIGHT: {
-        SPRITE->walking=1;
+        hero_is_walking(sprite,elapsed);
         sprite->xform=0;
         sprite->x+=HERO_WALK_SPEED*elapsed;
         if (physics_rectify_sprite(sprite,-1.0,0.0)) {
           if (!SPRITE->grounded) SPRITE->dragging=1;
         }
       } break;
+    default: hero_not_walking(sprite);
   }
   
   /* Jump or gravity.
@@ -166,8 +189,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   /* Fallen into a pit?
    */
   if (sprite->y>ROWC+3.0) {
-    fprintf(stderr,"Fell into pit!\n");
-    g.victory=-1;
+    sprite->defunct=1;
     return;
   }
 }
@@ -180,6 +202,11 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
   uint8_t xform=sprite->xform;
   if (SPRITE->dragging) {
     tileid+=3;
+  } else if (SPRITE->walking) {
+    switch (SPRITE->animframe) {
+      case 1: tileid+=1; break;
+      case 3: tileid+=2; break;
+    }
   }
   graf_draw_tile(&g.graf,g.texid_tiles,x,y,tileid,xform);
 }

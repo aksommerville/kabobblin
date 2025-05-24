@@ -30,10 +30,12 @@
 #define NS_sprtype_hero 2
 #define NS_sprtype_goblin 3
 #define NS_sprtype_arrow 4
+#define NS_sprtype_treasure 5
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
   _(goblin) \
-  _(arrow)
+  _(arrow) \
+  _(treasure)
 
 #endif

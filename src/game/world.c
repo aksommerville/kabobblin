@@ -9,6 +9,7 @@ int begin_level(int mapid) {
   g.deferred_victory=0;
   g.mapid=mapid;
   g.arrows_remaining=1;
+  g.got_treasure=0;
 
   const void *serial=0;
   int serialc=res_get(&serial,EGG_TID_map,mapid);

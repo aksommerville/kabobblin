@@ -16,17 +16,19 @@ The basic idea:
 - - [x] Basic app features: Modal, sprite, map, etc.
 - - [x] Provisional graphics: Terrain, hero, goblin, arrow
 - - - Let's try 8-pixel tiles instead of 16, go for a real lo-fi Atari kind of look.
-- - [ ] Core gameplay
+- - [x] Core gameplay
 - - - [x] Walk, jump, etc
 - - - [x] Fire arrows (yes, plural, while developing)
 - - - [x] Goblins
-- - - [ ] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers
+- - - [x] Hazards: Goblins, pits, fires, timed things like flamethrowers or hammers
+- - - - Got goblins and pits, i'm not sure we actually need more. Keeping it limited gives it a kind of canonical feel.
 - - - [x] Victory and failure conditions
-- - - [ ] Moveable blocks, for influencing goblins' movement.
+- - - [x] Moveable blocks, for influencing goblins' movement. ...DECLINE. As with hazards, let's keep it stupid simple.
 - - [ ] Coyote time.
-- - [ ] Hero animation.
-- - [ ] By EOD: Game should be basically playable. No audio or menus, and temporary layouts. ...missed
+- - [x] Hero animation.
+- - [x] By EOD: Game should be basically playable. No audio or menus, and temporary layouts. ...missed
 - Saturday
+- - [x] Treasure.
 - - [ ] Maps. 10..20 would be good.
 - - [ ] Real graphics.
 - - [ ] Sound effects.

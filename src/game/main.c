@@ -48,29 +48,31 @@ int egg_client_init() {
 static void check_completion(double elapsed) {
   if (g.victory) return; // Already established.
   int status=0;
-  if (!g.hero) {
-    status=-1;
-  } else {
-    int have_goblin=0;
-    int i=g.spritec;
-    while (i-->0) {
-      struct sprite *sprite=g.spritev[i];
-      if (sprite->defunct) continue;
-      if (sprite->type==&sprite_type_goblin) {
-        have_goblin=1;
-        break;
-      }
-    }
-    if (!have_goblin) {
-      status=1;
-    } else if (!g.arrows_remaining) {
-      status=-1;
+  int have_goblin=0,arrow_in_flight=0;;
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite->defunct) continue;
+    if (sprite->type==&sprite_type_goblin) {
+      have_goblin=1;
+    } else if (sprite->type==&sprite_type_arrow) {
+      if (!arrow_finished(sprite)) arrow_in_flight=1;
     }
   }
-  if (!status) return;
+  if (arrow_in_flight) {
+    status=0;
+  } else if (!have_goblin) {
+    status=1;
+  }
+  // If victory was not established, dying ends the level.
+  // You *are* allowed to win when dead. Your life is not as important as The Mission.
+  if (!status) {
+    if (!g.hero) status=-1;
+    else return;
+  }
   if (status!=g.deferred_victory) {
     g.deferred_victory=status;
-    g.deferred_victory_clock=2.0;
+    g.deferred_victory_clock=FADE_OUT_TIME;
   } else if ((g.deferred_victory_clock-=elapsed)<=0.0) {
     g.victory=g.deferred_victory;
   }
@@ -86,6 +88,7 @@ void egg_client_update(double elapsed) {
     }
   }
   // TODO modals
+  g.playtime+=elapsed;
   int i=g.spritec;
   while (i-->0) {
     struct sprite *sprite=g.spritev[i];
@@ -96,12 +99,18 @@ void egg_client_update(double elapsed) {
   // Level termination.
   check_completion(elapsed);
   if (g.victory<0) {
+    g.deathc++; // "death" or any other failure condition
     if (begin_level(g.mapid)<0) {
       egg_terminate(1);
       return;
     }
   } else if (g.victory>0) {
+    if (g.got_treasure) g.treasurec++;
     if (begin_level(g.mapid+1)<0) {
+      fprintf(stderr,"--- Starting over at map:1. treasurec=%d deathc=%d playtime=%.03f ---\n",g.treasurec,g.deathc,g.playtime);
+      g.treasurec=0;
+      g.deathc=0;
+      g.playtime=0.0;
       if (begin_level(1)<0) {
         egg_terminate(1);
         return;
@@ -123,6 +132,13 @@ void egg_client_render() {
     int y=(int)(sprite->y*NS_sys_tilesize+0.5);
     if (sprite->type->render) sprite->type->render(sprite,x,y);
     else graf_draw_tile(&g.graf,g.texid_tiles,x,y,sprite->tileid,sprite->xform);
+  }
+  if (g.deferred_victory) {
+    int alpha=(int)((1.0-(g.deferred_victory_clock/FADE_OUT_TIME))*255.0);
+    if (alpha>0) {
+      if (alpha>0xff) alpha=0xff;
+      graf_draw_rect(&g.graf,0,0,FBW,FBH,0x00000000|alpha);
+    }
   }
   graf_flush(&g.graf);
 }

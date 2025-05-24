@@ -126,6 +126,9 @@ static void goblin_decide_phase(struct sprite *sprite) {
  *************************************************************************/
  
 static struct sprite *goblin_bumpeth(struct sprite *sprite) {
+  double leadx=sprite->x;
+  if (SPRITE->dx<0.0) leadx+=sprite->phl;
+  else leadx+=sprite->phr;
   struct sprite **otherp=g.spritev;
   int i=g.spritec;
   for (;i-->0;otherp++) {
@@ -138,8 +141,8 @@ static struct sprite *goblin_bumpeth(struct sprite *sprite) {
     ) continue;
     double dy=other->y-sprite->y;
     if ((dy<-0.500)||(dy>0.500)) continue;
-    double dx=other->x-sprite->x;
-    if ((dx<-1.000)||(dx>1.000)) continue;
+    if (leadx<=other->x+other->phl) continue;
+    if (leadx>=other->x+other->phr) continue;
     return other;
   }
   return 0;

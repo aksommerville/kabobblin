@@ -110,3 +110,8 @@ const struct sprite_type sprite_type_arrow={
   .update=_arrow_update,
   .render=_arrow_render,
 };
+
+int arrow_finished(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_arrow)) return 0;
+  return SPRITE->stuck;
+}
