@@ -30,7 +30,7 @@ static void _treasure_update(struct sprite *sprite,double elapsed) {
     sprite->defunct=1;
     g.got_treasure=1;
     egg_play_sound(RID_sound_treasure);
-    //TODO visual fireworks?
+    struct sprite *fireworks=spawn_sprite(0,&sprite_type_moneymoneymoney,sprite->x,sprite->y);
   }
 }
 

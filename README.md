@@ -31,12 +31,12 @@ The basic idea:
 - - [x] Treasure.
 - - [x] Maps. 10..20 would be good. ...got 12
 - - [x] Select reasonable top and bottom times for the bonus.
-- - - With 12 maps, 1:51.204, still not optimal but pretty good (with all treasure). 1:08.612 without gold.
+- - - With 12 maps, 1:29.026 with all treasure. 1:08.612 without.
 - - - 2:30..4:00? ...2:00
 - - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
 - - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
 - - [ ] Real graphics.
-- - [ ] Visual fireworks for treasure.
+- - [x] Visual fireworks for treasure.
 - - [x] Sound effects.
 - - [x] Music.
 - - - [x] Play
@@ -50,17 +50,3 @@ The basic idea:
 - - [ ] Finish game by 1700. That's plenty of overflow time if needed.
 - - [ ] Finish Itch page by 2200, test, etc.
 - - [ ] Jam closes at midnight.
-
-Maps order
-1 MIXED => 9
-2 MILD => 7
-3 HARD => 12
-4 MILD => 6
-5 MILD => 5
-6 HARD => 11
-7 MILD => 4
-8 MILD => 3
-9 EASY => 1
-10 EASY => 2
-11 MIXED => 8
-12 MIXED => 10
