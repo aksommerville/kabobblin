@@ -38,6 +38,8 @@ int egg_client_init() {
   
   srand_auto();
   
+  egg_play_song(RID_song_all_in_a_row,0,1);
+  
   if (begin_level(1)<0) return -1;
   
   return 0;
