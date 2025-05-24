@@ -24,12 +24,15 @@ The basic idea:
 - - - - Got goblins and pits, i'm not sure we actually need more. Keeping it limited gives it a kind of canonical feel.
 - - - [x] Victory and failure conditions
 - - - [x] Moveable blocks, for influencing goblins' movement. ...DECLINE. As with hazards, let's keep it stupid simple.
-- - [ ] Coyote time.
+- - [x] Coyote time.
 - - [x] Hero animation.
 - - [x] By EOD: Game should be basically playable. No audio or menus, and temporary layouts. ...missed
 - Saturday
 - - [x] Treasure.
 - - [ ] Maps. 10..20 would be good.
+- - [ ] Select reasonable top and bottom times for the bonus.
+- - - With 12 maps, I've done under 2:30, just barely.
+- - - 2:30..4:00?
 - - [ ] Real graphics.
 - - [ ] Sound effects.
 - - [x] Music.
@@ -44,3 +47,17 @@ The basic idea:
 - - [ ] Finish game by 1700. That's plenty of overflow time if needed.
 - - [ ] Finish Itch page by 2200, test, etc.
 - - [ ] Jam closes at midnight.
+
+Maps order
+1 MIXED => 9
+2 MILD => 7
+3 HARD => 12
+4 MILD => 6
+5 MILD => 5
+6 HARD => 11
+7 MILD => 4
+8 MILD => 3
+9 EASY => 1
+10 EASY => 2
+11 MIXED => 8
+12 MIXED => 10

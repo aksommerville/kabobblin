@@ -53,6 +53,8 @@ static void goblin_decide_phase(struct sprite *sprite) {
     const uint8_t *upperp=g.map+row*COLC+col;
     const uint8_t *lowerp=upperp+COLC;
     if ((g.physics[*upperp]==NS_physics_vacant)&&(g.physics[*lowerp]==NS_physics_solid)) {
+      xlo=(double)(int)xlo;
+      xhi=xlo+1.0;
       int qcol=col;
       while (qcol>0) {
         qcol--;
@@ -103,9 +105,9 @@ static void goblin_decide_phase(struct sprite *sprite) {
   
   // If there's at least two meters of freedom, walk.
   double xrange=xhi-xlo;
-  if (xrange>=2.0) {
+  if (xrange>=1.5) {
     SPRITE->phase=GOBLIN_PHASE_WALK;
-    SPRITE->phaseclock=3.0;
+    SPRITE->phaseclock=7.0;
     double xmid=(xlo+xhi)/2.0;
     if (sprite->x>xmid) {
       SPRITE->dx=-1.0;

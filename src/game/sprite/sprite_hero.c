@@ -22,6 +22,7 @@ struct sprite_hero {
   double animclock;
   int animframe;
   int input_blackout; // After construction, all inputs must go zero before we acknowledge them.
+  double coyoteclock;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -87,6 +88,7 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
 static void hero_fall(struct sprite *sprite) {
   SPRITE->grounded=0;
   SPRITE->jump_power=0.0;
+  SPRITE->coyoteclock=0.250;
 }
 
 /* End a fall.
@@ -155,6 +157,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   
   /* Jump or gravity.
    */
+  if (SPRITE->coyoteclock>0.0) SPRITE->coyoteclock-=elapsed;
   if (!(input&EGG_BTN_SOUTH)) SPRITE->jump_blackout=0;
   if (SPRITE->jumping) {
     if (!(input&EGG_BTN_SOUTH)) {
@@ -162,7 +165,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     } else {
       hero_update_jump(sprite,elapsed);
     }
-  } else if ((input&EGG_BTN_SOUTH)&&((SPRITE->jump_power>0.0)||SPRITE->dragging)&&!SPRITE->jump_blackout) {
+  } else if ((input&EGG_BTN_SOUTH)&&((SPRITE->jump_power>0.0)||SPRITE->dragging||(SPRITE->coyoteclock>0.0))&&!SPRITE->jump_blackout) {
     hero_begin_jump(sprite);
   } else {
     SPRITE->gravity+=HERO_GRAVITY_RATE*elapsed;
