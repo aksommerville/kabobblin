@@ -53,6 +53,8 @@ static int _hero_init(struct sprite *sprite) {
 static void hero_begin_jump(struct sprite *sprite) {
   if (SPRITE->dragging) {
     SPRITE->jump_power=HERO_JUMP_DEFAULT;
+  } else if (SPRITE->coyoteclock>0.0) {
+    SPRITE->jump_power=HERO_JUMP_DEFAULT;
   } else {
     if (SPRITE->jump_power<=0.0) return;
   }
@@ -88,7 +90,7 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
 static void hero_fall(struct sprite *sprite) {
   SPRITE->grounded=0;
   SPRITE->jump_power=0.0;
-  SPRITE->coyoteclock=0.250;
+  SPRITE->coyoteclock=0.125;
 }
 
 /* End a fall.
@@ -185,14 +187,18 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   
   /* Fire arrow.
    */
-  if (!SPRITE->dragging&&g.arrows_remaining) {
-    if ((input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+  if ((input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+    if (!SPRITE->dragging&&g.arrows_remaining) {
       struct sprite *arrow=spawn_sprite(0,&sprite_type_arrow,sprite->x,sprite->y);
       if (arrow) {
         egg_play_sound(RID_sound_arrow);
         arrow_setup(arrow,(sprite->xform&EGG_XFORM_XREV)?-1.0:1.0);
         g.arrows_remaining--;
+      } else {
+        egg_play_sound(RID_sound_arrow_reject);
       }
+    } else {
+      egg_play_sound(RID_sound_arrow_reject);
     }
   }
   

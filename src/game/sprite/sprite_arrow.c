@@ -38,7 +38,12 @@ static void arrow_check_skewer(struct sprite *sprite) {
       if (sprite->y>dumpling->y+dumpling->phb) continue;
       dumpling->defunct=1;
       SPRITE->goblinc++;
-      egg_play_sound(RID_sound_skewer);
+      switch (SPRITE->goblinc) {
+        case 1: egg_play_sound(RID_sound_skewer); break;
+        case 2: egg_play_sound(RID_sound_skewer2); break;
+        case 3: egg_play_sound(RID_sound_skewer3); break;
+        default: egg_play_sound(RID_sound_skewer4); break;
+      }
       if (SPRITE->dx<0.0) {
         if (dumpling->x<sprite->x) {
           sprite->x=dumpling->x;
@@ -53,7 +58,23 @@ static void arrow_check_skewer(struct sprite *sprite) {
 }
 
 static void _arrow_update(struct sprite *sprite,double elapsed) {
-  if (SPRITE->stuck) return;
+
+  /* If we're stuck and unkabobbled, allow the hero to pick us back up.
+   * Otherwise, stuck, we do nothing.
+   */
+  if (SPRITE->stuck) {
+    if (!SPRITE->goblinc&&g.hero) {
+      double dx=g.hero->x-sprite->x; if (dx<0.0) dx=-dx;
+      double dy=g.hero->y-sprite->y; if (dy<0.0) dy=-dy;
+      if (dx+dy<1.000) {
+        egg_play_sound(RID_sound_arrow_recover);
+        sprite->defunct=1;
+        g.arrows_remaining=1;
+      }
+    }
+    return;
+  }
+  
   sprite->x+=SPRITE->dx*ARROW_SPEED*elapsed;
   if ((sprite->x<-5.0)||(sprite->x>COLC+5.0)) {
     sprite->defunct=1;

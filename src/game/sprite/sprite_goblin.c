@@ -5,13 +5,17 @@
 #define GOBLIN_PHASE_ATTACK 2
 #define GOBLIN_PHASE_EAT 3
 #define GOBLIN_PHASE_FALL 4
+#define GOBLIN_PHASE_HUNGRY 5
 
 #define GOBLIN_WALK_SPEED 2.0
 #define GOBLIN_ATTACK_SPEED 7.0 /* Hero's walk speed is 6. */
 #define GOBLIN_ATTACK_DISTANCE 1.500
+#define GOBLIN_RETAIN_DISTANCE 4.000 /* Once triggered, he'll lose interest when you get so far away. */
+#define GOBLIN_OVERSHOOT_DISTANCE 2.000 /* Stop attack if I've gone so far in the wrong direction. */
 #define GOBLIN_EAT_DISTANCE 0.100 /* This can be low, should end roughly centered on the hero. But too low and we could miss it. */
 #define GOBLIN_GRAVITY_RATE 18.0
 #define GOBLIN_GRAVITY_LIMIT 10.0
+#define GOBLIN_HUNGRY_TIME 0.200
 
 struct sprite_goblin {
   struct sprite hdr;
@@ -35,6 +39,25 @@ static int _goblin_init(struct sprite *sprite) {
  *****************************************************************************/
 
 static void goblin_decide_phase(struct sprite *sprite) {
+
+  // If we're hungry and the hero still looks reachable, attack.
+  if ((SPRITE->phase==GOBLIN_PHASE_HUNGRY)&&g.hero) {
+    double dy=g.hero->y-sprite->y;
+    if ((dy>-0.500)&&(dy<0.500)) {
+      double dx=g.hero->x-sprite->x;
+      if (
+        ((SPRITE->dx<0.0)&&(dx>-GOBLIN_RETAIN_DISTANCE)&&(dx<GOBLIN_ATTACK_DISTANCE))||
+        ((SPRITE->dx>0.0)&&(dx>-GOBLIN_ATTACK_DISTANCE)&&(dx<GOBLIN_RETAIN_DISTANCE))
+      ) {
+        egg_play_sound(RID_sound_attack);
+        SPRITE->phase=GOBLIN_PHASE_ATTACK;
+        SPRITE->phaseclock=999.0;
+        sprite->tileid=SPRITE->tileid0+3;
+        return;
+      }
+    }
+    sprite->tileid=SPRITE->tileid0;
+  }
 
   // If we're off the map, or the cell below me is not solid, fall.
   int col=(int)sprite->x;
@@ -223,15 +246,16 @@ static void goblin_update_ATTACK(struct sprite *sprite,double elapsed) {
     return;
   }
   // If the hero escapes vertically, reset. This is likely; a canny hero would jump.
+  // It's not the -1/2..1/2 trigger range, it's wider.
   double dy=g.hero->y-sprite->y;
-  if ((dy<-0.750)||(dy>0.750)) {
+  if ((dy<-1.750)||(dy>1.750)) {
     SPRITE->phaseclock=0.0;
     return;
   }
   // If we're within some horizontal threshold, begin the feast.
   // But! We never start eating if the floor has dropped out. This is critical, it's fairly easy for the hero to lead goblins off a cliff.
   double dx=g.hero->x-sprite->x;
-  if ((dx>=-GOBLIN_EAT_DISTANCE)&&(dx<=GOBLIN_EAT_DISTANCE)) {
+  if ((dx>=-GOBLIN_EAT_DISTANCE)&&(dx<=GOBLIN_EAT_DISTANCE)&&(dy>=-0.5)&&(dy<=0.5)) {
     if (goblin_unbefloored(sprite)) {
       SPRITE->phase=GOBLIN_PHASE_FALL;
       SPRITE->phaseclock=999.0;
@@ -245,14 +269,26 @@ static void goblin_update_ATTACK(struct sprite *sprite,double elapsed) {
     }
     return;
   }
-  // Advance at a constant speed.
+  // If we're too far beyond the target horizontally, d'oh, give up.
+  if (
+    ((SPRITE->dx<0.0)&&(dx>GOBLIN_OVERSHOOT_DISTANCE))||
+    ((SPRITE->dx>0.0)&&(dx<-GOBLIN_OVERSHOOT_DISTANCE))
+  ) {
+    SPRITE->phaseclock=0.0;
+    return;
+  }
+  // Advance at a constant speed. NB (SPRITE->dx) not (dx). He keeps going if you jump over him, the fool.
   sprite->tileid=SPRITE->tileid0+3;
-  if (dx>0.0) {
+  if (SPRITE->dx>0.0) {
     sprite->xform=0;
     sprite->x+=GOBLIN_ATTACK_SPEED*elapsed;
   } else {
     sprite->xform=EGG_XFORM_XREV;
     sprite->x-=GOBLIN_ATTACK_SPEED*elapsed;
+  }
+  // If I struck a wall, stop.
+  if (physics_rectify_sprite(sprite,-SPRITE->dx,0.0)) {
+    SPRITE->phaseclock=0.0;
   }
 }
 
@@ -283,6 +319,23 @@ static void goblin_update_FALL(struct sprite *sprite,double elapsed) {
   }
 }
 
+static void goblin_update_HUNGRY(struct sprite *sprite,double elapsed) {
+  if (g.hero) {
+    double dy=g.hero->y-sprite->y;
+    if ((dy>-0.500)&&(dy<0.500)) {
+      double dx=g.hero->x-sprite->x;
+      if (
+        ((SPRITE->dx<0.0)&&(dx>-GOBLIN_RETAIN_DISTANCE)&&(dx<=GOBLIN_ATTACK_DISTANCE))||
+        ((SPRITE->dx>0.0)&&(dx>=-GOBLIN_ATTACK_DISTANCE)&&(dx<GOBLIN_RETAIN_DISTANCE))
+      ) {
+        // Still in range, cool.
+      } else {
+        SPRITE->phaseclock=0.0;
+      }
+    }
+  }
+}
+
 static void _goblin_update(struct sprite *sprite,double elapsed) {
 
   // IDLE and WALK phases can be interrupted to attack the hero.
@@ -291,12 +344,17 @@ static void _goblin_update(struct sprite *sprite,double elapsed) {
     if ((dy>-0.500)&&(dy<0.500)) {
       double dx=g.hero->x-sprite->x;
       if ((dx>-GOBLIN_ATTACK_DISTANCE)&&(dx<GOBLIN_ATTACK_DISTANCE)) {
-        egg_play_sound(RID_sound_attack);
-        SPRITE->phase=GOBLIN_PHASE_ATTACK;
-        SPRITE->phaseclock=999.0;
+        egg_play_sound(RID_sound_hungry);
+        SPRITE->phase=GOBLIN_PHASE_HUNGRY;
+        SPRITE->phaseclock=GOBLIN_HUNGRY_TIME;
         sprite->tileid=SPRITE->tileid0+3;
-        if (dx>0.0) sprite->xform=0;
-        else sprite->xform=EGG_XFORM_XREV;
+        if (dx>0.0) {
+          sprite->xform=0;
+          SPRITE->dx=1.0;
+        } else {
+          sprite->xform=EGG_XFORM_XREV;
+          SPRITE->dx=-1.0;
+        }
       }
     }
   }
@@ -312,6 +370,17 @@ static void _goblin_update(struct sprite *sprite,double elapsed) {
     case GOBLIN_PHASE_ATTACK: goblin_update_ATTACK(sprite,elapsed); break;
     case GOBLIN_PHASE_EAT: goblin_update_EAT(sprite,elapsed); break;
     case GOBLIN_PHASE_FALL: goblin_update_FALL(sprite,elapsed); break;
+    case GOBLIN_PHASE_HUNGRY: goblin_update_HUNGRY(sprite,elapsed); break;
+  }
+}
+
+static void _goblin_render(struct sprite *sprite,int x,int y) {
+  if (SPRITE->phase==GOBLIN_PHASE_HUNGRY) {
+    // HUNGRY takes two tiles. Also we don't bother setting (tileid) in this case.
+    graf_draw_tile(&g.graf,g.texid_tiles,x,y,0x56,sprite->xform);
+    graf_draw_tile(&g.graf,g.texid_tiles,x,y-NS_sys_tilesize,0x46,sprite->xform);
+  } else {
+    graf_draw_tile(&g.graf,g.texid_tiles,x,y,sprite->tileid,sprite->xform);
   }
 }
 
@@ -320,4 +389,5 @@ const struct sprite_type sprite_type_goblin={
   .objlen=sizeof(struct sprite_goblin),
   .init=_goblin_init,
   .update=_goblin_update,
+  .render=_goblin_render,
 };

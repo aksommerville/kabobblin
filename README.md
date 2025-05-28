@@ -48,6 +48,13 @@ The basic idea:
 - - - [x] Scene Denouement, and find a more concise name for that.
 - - [x] By EOD: Try to be completely finished with the game. So we can see it fresh tomorrow for second-guessing.
 - Sunday
-- - [ ] Finish game by 1700. That's plenty of overflow time if needed.
-- - [ ] Finish Itch page by 2200, test, etc.
-- - [ ] Jam closes at midnight.
+- - [x] Finish game by 1700. That's plenty of overflow time if needed.
+- - [x] Finish Itch page by 2200, test, etc.
+- - [x] Jam closes at midnight.
+
+Feedback from TechHead, 26 May:
+- [x] Introduce climbing with less danger.
+- [x] Visible "hungry" state for goblins before they attack.
+- [x] Consider widening attack radius (but might not be necessary with Hungry). ...Hungry takes care of it.
+- [x] Increase pitch with increasing kabobblification.
+- [x] Pick up stuck arrow, only if unkabobbled.

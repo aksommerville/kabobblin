@@ -13,5 +13,5 @@
 image image:3
 sprite @9,3 sprite:goblin 0x00000000
 sprite @7,3 sprite:goblin 0x00000000
-sprite @3,9 sprite:hero 0x00000000
+sprite @16,9 sprite:hero 0x00000000
 sprite @2,4 sprite:treasure 0x00000000
