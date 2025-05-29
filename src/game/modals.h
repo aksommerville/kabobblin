@@ -10,6 +10,7 @@
 
 struct hello;
 struct gameover;
+struct popup;
 
 void hello_del(struct hello *hello);
 struct hello *hello_new();
@@ -20,5 +21,13 @@ void gameover_del(struct gameover *gameover);
 struct gameover *gameover_new();
 void gameover_update(struct gameover *gameover,double elapsed);
 void gameover_render(struct gameover *gameover);
+
+/* (popup) is a little different -- Owner MUST render the game first, then the popup.
+ * Do not update the game while popped up.
+ */
+void popup_del(struct popup *popup);
+struct popup *popup_new();
+void popup_update(struct popup *popup,double elapsed);
+void popup_render(struct popup *popup);
 
 #endif

@@ -39,6 +39,7 @@ extern struct g {
   // No generalized modals. There's a Hello and a Game Over, both entirely bespoke.
   struct hello *hello;
   struct gameover *gameover;
+  struct popup *popup;
   
   int mapid;
   uint8_t map[COLC*ROWC];
@@ -106,6 +107,7 @@ int arrow_finished(const struct sprite *sprite);
 void begin_hello();
 void begin_gameover();
 void begin_play();
+void toggle_popup();
 
 void hiscore_save();
 

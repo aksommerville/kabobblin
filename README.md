@@ -58,3 +58,9 @@ Feedback from TechHead, 26 May:
 - [x] Consider widening attack radius (but might not be necessary with Hungry). ...Hungry takes care of it.
 - [x] Increase pitch with increasing kabobblification.
 - [x] Pick up stuck arrow, only if unkabobbled.
+
+More jam feedback:
+- [x] Some option to reset during play.
+- [ ] Consider upping the gravity a little, someone mentioned it feels slow.
+- [ ] It's possible for goblins to land directly upon each other, then they go inert. Let them escape somehow.
+- [ ] Can we stop the clock during fade-outs? That might trim times enough to make <1:00 reachable. (it's probably reachable today technically but I can't do it).

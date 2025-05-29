@@ -115,11 +115,16 @@ void egg_client_update(double elapsed) {
       egg_terminate(0);
       return;
     }
+    if (!g.hello&&!g.gameover&&(g.input&EGG_BTN_AUX1)&&!(g.pvinput&EGG_BTN_AUX1)) {
+      toggle_popup();
+    }
   }
   if (g.hello) {
     hello_update(g.hello,elapsed);
   } else if (g.gameover) {
     gameover_update(g.gameover,elapsed);
+  } else if (g.popup) {
+    popup_update(g.popup,elapsed);
   } else {
   
     g.playtime+=elapsed;
@@ -145,8 +150,8 @@ void egg_client_update(double elapsed) {
       }
     }
     
-    drop_defunct_sprites();
   }
+  drop_defunct_sprites(); // Even if not playing. Otherwise there can be one frame with old sprites still present, when the game restarts.
 }
 
 void egg_client_render() {
@@ -156,6 +161,7 @@ void egg_client_render() {
   } else if (g.gameover) {
     gameover_render(g.gameover);
   } else {
+    // Play or play+popup.
     graf_draw_tile_buffer(&g.graf,g.texid_tiles,NS_sys_tilesize>>1,NS_sys_tilesize>>1,g.map,COLC,ROWC,COLC);
     int i=g.spritec;
     while (i-->0) {
@@ -171,6 +177,9 @@ void egg_client_render() {
         if (alpha>0xff) alpha=0xff;
         graf_draw_rect(&g.graf,0,0,FBW,FBH,0x00000000|alpha);
       }
+    }
+    if (g.popup) {
+      popup_render(g.popup);
     }
   }
   graf_flush(&g.graf);
@@ -241,4 +250,14 @@ void begin_play() {
     egg_terminate(1);
     return;
   }
+}
+
+void toggle_popup() {
+  if (g.popup) {
+    popup_del(g.popup);
+    g.popup=0;
+  } else {
+    if (!(g.popup=popup_new())) return;
+  }
+  egg_play_sound(RID_sound_popup_toggle);
 }
