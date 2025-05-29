@@ -1,8 +1,8 @@
 #include "game/game.h"
 
 #define HERO_WALK_SPEED 6.0 /* m/s */
-#define HERO_GRAVITY_RATE 18.0 /* m/s**2 */
-#define HERO_GRAVITY_LIMIT 10.0 /* m/s */
+#define HERO_GRAVITY_RATE 24.0 /* m/s**2 */
+#define HERO_GRAVITY_LIMIT 16.0 /* m/s */
 #define HERO_GRAVITY_LIMIT_DRAG 2.0 /* m/s */
 #define HERO_JUMP_DEFAULT 14.0 /* m/s, maximum (initial) jump velocity */
 #define HERO_JUMP_DECAY 78.0 /* m/s**2 */
