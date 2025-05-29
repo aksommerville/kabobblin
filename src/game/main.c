@@ -127,7 +127,7 @@ void egg_client_update(double elapsed) {
     popup_update(g.popup,elapsed);
   } else {
   
-    g.playtime+=elapsed;
+    if (!g.deferred_victory) g.playtime+=elapsed;
     int i=g.spritec;
     while (i-->0) {
       struct sprite *sprite=g.spritev[i];

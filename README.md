@@ -31,7 +31,7 @@ The basic idea:
 - - [x] Treasure.
 - - [x] Maps. 10..20 would be good. ...got 12
 - - [x] Select reasonable top and bottom times for the bonus.
-- - - With 12 maps, 1:27.987 with all treasure. 1:08.612 without.
+- - - With 12 maps, 1:27.987 (before clock stop) with all treasure. 0:55.764 without.
 - - - 2:30..4:00? ...2:00
 - - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
 - - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
@@ -62,5 +62,6 @@ Feedback from TechHead, 26 May:
 More jam feedback:
 - [x] Some option to reset during play.
 - [x] Consider upping the gravity a little, someone mentioned it feels slow.
-- [ ] It's possible for goblins to land directly upon each other, then they go inert. Let them escape somehow.
-- [ ] Can we stop the clock during fade-outs? That might trim times enough to make <1:00 reachable. (it's probably reachable today technically but I can't do it).
+- [x] It's possible for goblins to land directly upon each other, then they go inert. Let them escape somehow.
+- - ...hard enough to repro that i don't think it's worth fixing. (doesn't cause a problem, just a little weird)
+- [x] Can we stop the clock during fade-outs? That might trim times enough to make <1:00 reachable. (it's probably reachable today technically but I can't do it).
