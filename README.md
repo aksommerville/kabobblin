@@ -31,7 +31,7 @@ The basic idea:
 - - [x] Treasure.
 - - [x] Maps. 10..20 would be good. ...got 12
 - - [x] Select reasonable top and bottom times for the bonus.
-- - - With 12 maps, 1:27.987 (before clock stop) with all treasure. 0:55.764 without.
+- - - My best: 1:18.018 with all treasure. 0:50.893 without.
 - - - 2:30..4:00? ...2:00
 - - [x] Observed a goblin flung into the wall, when we were struggling close to each other.
 - - - Easy enough to reproduce if you stub eating. Get attacked and guide him into a wall, doesn't happen all the time, but pretty reliable.
